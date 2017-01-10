@@ -21,7 +21,7 @@ RUN apt-get -qq update && \
 # Install wkhtmltopdf
 RUN wget -O wkhtmltox.tar.xz http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
 RUN tar -xf wkhtmltox.tar.xz
-ENV PATH ${PATH}:/wkhtmltopdf/wkhtmltox/bin
+ENV PATH ${PATH}:/wkhtmltox/bin
 
 # Entrypoint
 RUN mkdir /pandoc
