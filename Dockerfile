@@ -3,7 +3,7 @@
 #    https://github.com/geometalab/docker-pandoc/blob/develop/Dockerfile
 #    https://github.com/vpetersson/docker-pandoc/blob/master/Dockerfile
 
-FROM debian:latest
+FROM debian:jessie
 MAINTAINER damien clochard <daamien@gmail.com>
 
 # Set the env variables to non-interactive
@@ -18,8 +18,6 @@ RUN apt-get -qq update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# TODO: Install pandoc from https://github.com/jgm/pandoc/releases/
-
 # Install wkhtmltopdf
 RUN wget -O wkhtmltox.tar.xz http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
 RUN tar -xf wkhtmltox.tar.xz
@@ -29,6 +27,4 @@ ENV PATH ${PATH}:/wkhtmltopdf/wkhtmltox/bin
 RUN mkdir /pandoc
 WORKDIR /pandoc
 ENTRYPOINT ["pandoc"]
-CMD ["--help"]
-
 
