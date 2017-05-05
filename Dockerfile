@@ -5,7 +5,7 @@
 #    https://github.com/geometalab/docker-pandoc/blob/develop/Dockerfile
 #    https://github.com/vpetersson/docker-pandoc/blob/master/Dockerfile
 
-FROM debian:latest
+FROM debian:jessie 
 MAINTAINER damien clochard <daamien@gmail.com>
 
 # Check for latest version here : 
@@ -29,6 +29,8 @@ RUN apt-get -qq update && \
     apt-get -qq -y install git wget tar xz-utils python-setuptools && \
     # required by pandoc-latex-tip
     apt-get -qq -y install python-imaging libjpeg62-turbo-dev libfreetype6 libfreetype6-dev && \
+    # Install Python3
+    apt-get install -y python3 python3-dev python3-pip python3-virtualenv && \
     # clean up
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -40,8 +42,8 @@ RUN wget -O pandoc.deb ${PANDOC_SOURCE}/download/${PANDOC_VERSION}/pandoc-${DEBI
 #
 # Pandoc filters
 #
-RUN easy_install pip && \
-    pip install pandocfilters \
+#RUN easy_install pip && \
+RUN    pip3 install pandocfilters \
 		panflute \
 		pandoc-latex-admonition \
                 pandoc-latex-environment \
@@ -49,7 +51,7 @@ RUN easy_install pip && \
 		icon_font_to_png 
  
 # https://github.com/chdemko/pandoc-latex-tip/issues/1
-RUN pip install git+https://github.com/chdemko/pandoc-latex-tip.git --egg
+RUN pip3 install git+https://github.com/chdemko/pandoc-latex-tip.git --egg
 
 
 # Install wkhtmltopdf
