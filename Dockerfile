@@ -6,7 +6,7 @@
 #    https://github.com/vpetersson/docker-pandoc/blob/master/Dockerfile
 
 FROM debian:jessie
-MAINTAINER damien clochard <daamien@gmail.com>
+MAINTAINER damien clochard <damien.clochard@dalibo.com>
 
 # Check for latest version here : 
 ENV PANDOC_SOURCE https://github.com/jgm/pandoc/releases/
@@ -21,14 +21,20 @@ ENV DEBIAN_PRIORITY critical
 ENV DEBCONF_NOWARNINGS yes
 
 RUN apt-get -qq update && \
+    # for deployment
+    apt-get -qq -y install rsync openssh-client && \	
     # latex toolchain 
     apt-get -qq -y install texlive texlive-xetex && \
     # fonts
     apt-get -qq -y install fonts-lato && \
     # build tools
-    apt-get -qq -y install git wget tar xz-utils python-setuptools && \
+    apt-get -qq -y install parallel git wget tar xz-utils python-setuptools && \
     # required by pandoc-latex-tip
     apt-get -qq -y install python-imaging libjpeg62-turbo-dev libfreetype6 libfreetype6-dev && \
+    # required by panflute
+    apt-get -qq -y install python3 python3-dev python3-pip python3-virtualenv && \		
+    # required for PDF meta analysis
+    apt-get -qq -y install poppler-utils && \		
     # clean up
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -42,17 +48,24 @@ RUN wget -O pandoc.deb ${PANDOC_SOURCE}/download/${PANDOC_VERSION}/pandoc-${DEBI
 #
 RUN easy_install pip && \
     pip install pandocfilters \
-		panflute \
+		pandoc-latex-admonition \
                 pandoc-latex-environment \
-                pandoc-latex-barcode \ 
+                pandoc-latex-barcode \
+		pandoc-latex-levelup \ 
 		icon_font_to_png 
  
 # https://github.com/chdemko/pandoc-latex-tip/issues/1
 RUN pip install git+https://github.com/chdemko/pandoc-latex-tip.git --egg
 
+# planflute does not like python2
+RUN pip3 install panflute
+
+# Additional Python modules
+RUN pip install pypdf2  
 
 # Install wkhtmltopdf
-RUN wget -O wkhtmltox.tar.xz http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz && \
+ENV WKHTMLTOX https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+RUN wget -O wkhtmltox.tar.xz ${WKHTMLTOX} && \
     tar -xf wkhtmltox.tar.xz
 ENV PATH ${PATH}:/wkhtmltox/bin
 

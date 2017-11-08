@@ -25,9 +25,16 @@ docker pull daamien/pandocker
 Add this to your `~/.bashrc` :
 
 ```
-alias pandoc="docker run -v `pwd`:/pandoc daamien/pandocker $@"
+alias pandoc="docker run --rm -v `pwd`:/pandoc daamien/pandocker $@"
 ```
 
+
+Note: if SELinux is enabled on you system, you might need to add the
+`--privileged` tag to force access to the mouting points.
+
+
+More on this:
+https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities
 
 ## Branches 
 
