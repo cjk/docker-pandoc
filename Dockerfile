@@ -31,10 +31,12 @@ RUN set -x && \
         # latex toolchain
         lmodern \
         texlive \
-        texlive-lang-french \
+        texlive-latex-extra \
+        texlive-lang-german \
+        texlive-lang-english \
         texlive-luatex \
         texlive-pstricks \
-        texlive-xetex \
+        texlive-xetex latex-xcolor \
         # reveal (see issue #18)
         netbase \
         # fonts
@@ -82,14 +84,15 @@ RUN fetch-pandoc.sh ${PANDOC_VERSION} ./cache/pandoc.deb && \
 #
 # Pandoc filters
 #
-ADD requirements.txt ./
+COPY requirements.txt ./
 # Pillow must be installed first. When installed as a dependency from setup.py,
 # Pillow is rebuilt. However, installed explicitly first, Pillow is properly
 # installed from wheel saving a lot of build dependencies.
 RUN pip3 --no-cache-dir install --find-links file://${PWD}/cache Pillow
 RUN pip3 --no-cache-dir install --find-links file://${PWD}/cache -r requirements.txt
 
-VOLUME /pandoc
 WORKDIR /pandoc
-ADD pandoc.sh /usr/local/bin
-ENTRYPOINT ["pandoc.sh"]
+VOLUME ["/pandoc"]
+
+ENTRYPOINT ["pandoc"]
+CMD ["--help"]

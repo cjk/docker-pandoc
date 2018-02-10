@@ -1,6 +1,6 @@
-NAME=dalibo/pandocker
+NAME=cjk/pandoc
 TAG=latest
-PANDOC_VERSION=2.1
+PANDOC_VERSION=2.1.1
 
 all: build
 
